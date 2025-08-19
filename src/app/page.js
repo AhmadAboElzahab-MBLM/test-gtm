@@ -7,14 +7,19 @@ export default function page() {
       <button
         onClick={() => {
           console.log("clicked");
+
+          // GTM Event (working correctly)
           sendGTMEvent({ event: "ahmad", value: "ahmadClicked" });
-          // Use the correct event signature:
-          sendGAEvent("ahmad", { value: "ahmadClicked" });
+
+          // GA Event - Correct syntax for custom event "ahmad"
+          sendGAEvent("event", "ahmad", {
+            value: "ahmadClicked",
+          });
         }}
       >
         Send Event
       </button>
-      Test AMAZING
+      MBLM
     </div>
   );
 }
