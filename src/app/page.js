@@ -1,5 +1,5 @@
 "use client";
-import { sendGTMEvent } from "@next/third-parties/google";
+import { sendGAEvent, sendGTMEvent } from "@next/third-parties/google";
 
 export default function page() {
   return (
@@ -8,6 +8,7 @@ export default function page() {
         onClick={() => {
           console.log("clicked");
           sendGTMEvent({ event: "ahmad", value: "ahmadClicked" });
+          sendGAEvent({ event: "ahmad", value: "ahmadClicked" });
         }}
       >
         Send Event
