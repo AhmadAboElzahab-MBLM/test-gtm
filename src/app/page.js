@@ -13,6 +13,7 @@ export default function page() {
       >
         Send Event
       </button>
+      Test
     </div>
   );
 }
