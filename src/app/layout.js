@@ -20,6 +20,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        <GoogleTagManager gtmId="GTM-KDD5NF7C" />
         {children}
       </body>
     </html>

@@ -1,3 +1,7 @@
 export default function page() {
-  return <div>AHMAD</div>;
+  return (
+    <div>
+      <button>Fire</button>
+    </div>
+  );
 }
