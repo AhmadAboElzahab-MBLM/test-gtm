@@ -2,7 +2,10 @@ export default function page() {
   return (
     <div>
       <button
-        onClick={() => sendGTMEvent({ event: "ahmad", value: "ahmadClicked" })}
+        onClick={() => {
+          console.log("clicked");
+          sendGTMEvent({ event: "ahmad", value: "ahmadClicked" });
+        }}
       >
         Send Event
       </button>
