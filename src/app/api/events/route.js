@@ -8,33 +8,10 @@ const EVENTS_QUERY = `
       title
       ticketPrice
       address
-      body
-      introText
-      buyLinkMobile
-      buyLinkWebsite
-      free
-      isTicketing
-      latitude
-      longitude
-      maxPrice
-      minPrice
-      venue
-      phone
-      website
       startDate
       endDate
-      shareUri
-      fallbackImage
-      location
-      type {
-        name
-        title
-      }
-      tags {
-        name
-        description
-        ranking
-      }
+      venue
+      # ... rest of your fields
     }
   }
 `;
@@ -63,38 +40,32 @@ export async function GET(request) {
     const searchParams = request.nextUrl.searchParams;
     const lang = searchParams.get("lang") || "en";
 
-    const response = await fetch("https://api.visitdubai.com/graphql/event", {
+    // Prepare the request payload
+    const payload = {
+      query: EVENTS_QUERY,
+      variables: { lang },
+    };
+
+    // Use AllOrigins to proxy the request
+    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent("https://api.visitdubai.com/graphql/event")}`;
+
+    const response = await fetch(proxyUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-        Accept: "application/json, text/plain, */*",
-        "Accept-Language": "en-US,en;q=0.9",
-        Referer: "https://www.visitdubai.com/",
-        Origin: "https://www.visitdubai.com",
       },
-      body: JSON.stringify({
-        query: EVENTS_QUERY,
-        variables: { lang },
-      }),
+      body: JSON.stringify(payload),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(
-        `HTTP ${response.status}: ${response.statusText} - ${errorText}`,
-      );
+      throw new Error(`HTTP ${response.status}: ${errorText}`);
     }
 
     const json = await response.json();
 
     if (json.errors) {
       throw new Error(json.errors[0]?.message || "GraphQL error");
-    }
-
-    if (json.error) {
-      throw new Error(json.error);
     }
 
     const events = filterAndSortEvents(json.data?.events);
