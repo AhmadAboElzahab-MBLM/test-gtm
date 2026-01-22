@@ -67,6 +67,12 @@ export async function GET(request) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        Accept: "application/json, text/plain, */*",
+        "Accept-Language": "en-US,en;q=0.9",
+        Referer: "https://www.visitdubai.com/",
+        Origin: "https://www.visitdubai.com",
       },
       body: JSON.stringify({
         query: EVENTS_QUERY,
