@@ -8,10 +8,33 @@ const EVENTS_QUERY = `
       title
       ticketPrice
       address
+      body
+      introText
+      buyLinkMobile
+      buyLinkWebsite
+      free
+      isTicketing
+      latitude
+      longitude
+      maxPrice
+      minPrice
+      venue
+      phone
+      website
       startDate
       endDate
-      venue
-      # ... rest of your fields
+      shareUri
+      fallbackImage
+      location
+      type {
+        name
+        title
+      }
+      tags {
+        name
+        description
+        ranking
+      }
     }
   }
 `;
@@ -40,32 +63,32 @@ export async function GET(request) {
     const searchParams = request.nextUrl.searchParams;
     const lang = searchParams.get("lang") || "en";
 
-    // Prepare the request payload
-    const payload = {
-      query: EVENTS_QUERY,
-      variables: { lang },
-    };
-
-    // Use AllOrigins to proxy the request
-    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent("https://api.visitdubai.com/graphql/event")}`;
-
-    const response = await fetch(proxyUrl, {
+    const response = await fetch("https://api.visitdubai.com/graphql/event", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({
+        query: EVENTS_QUERY,
+        variables: { lang },
+      }),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(`HTTP ${response.status}: ${errorText}`);
+      throw new Error(
+        `HTTP ${response.status}: ${response.statusText} - ${errorText}`,
+      );
     }
 
     const json = await response.json();
 
     if (json.errors) {
       throw new Error(json.errors[0]?.message || "GraphQL error");
+    }
+
+    if (json.error) {
+      throw new Error(json.error);
     }
 
     const events = filterAndSortEvents(json.data?.events);
