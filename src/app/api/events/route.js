@@ -63,16 +63,19 @@ export async function GET(request) {
     const searchParams = request.nextUrl.searchParams;
     const lang = searchParams.get("lang") || "en";
 
-    const response = await fetch("https://api.visitdubai.com/graphql/event", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `https://corsproxy.io/?https://api.visitdubai.com/graphql/event`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          query: EVENTS_QUERY,
+          variables: { lang },
+        }),
       },
-      body: JSON.stringify({
-        query: EVENTS_QUERY,
-        variables: { lang },
-      }),
-    });
+    );
 
     if (!response.ok) {
       const errorText = await response.text();
